@@ -7,10 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model UserLanguage {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  flag        String
+  users    User[] 
+}
+
 model User {
   id             Int           @id @default(autoincrement())
   email          String        @unique
   password       String
+  name           String
+  languageId   Int           // Foreign key
+  language     UserLanguage  @relation(fields: [languageId], references: [id])
   createdAt      DateTime      @default(now())
   progress       UserProgress[]
   attempts       UserAttempt[]
@@ -23,7 +33,9 @@ model Language {
   name        String    @unique
   description String?
   lessons     Lesson[]
+  flag        String
 }
+
 
 model Lesson {
   id          Int          @id @default(autoincrement())
@@ -93,4 +105,4 @@ model UserAchievement {
   user          User         @relation(fields: [userId], references: [id])
   achievement   Achievement  @relation(fields: [achievementId], references: [id])
 }
-" npx prisma migrate dev --schema=prisma/schema/schema.prisma --name init"
+// " npx prisma migrate dev --schema=prisma/schema/schema.prisma --name init"
