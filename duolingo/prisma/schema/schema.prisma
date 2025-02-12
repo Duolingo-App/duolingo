@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int           @id @default(autoincrement())
+  email          String        @unique
+  password       String
+  createdAt      DateTime      @default(now())
+  progress       UserProgress[]
+  attempts       UserAttempt[]
+  points         UserPoint[]
+  achievements   UserAchievement[]
+}
+
+model Language {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id          Int          @id @default(autoincrement())
+  languageId  Int
+  title       String
+  description String?
+  questions   Question[]
+  progress    UserProgress[]
+
+  language    Language   @relation(fields: [languageId], references: [id])
+}
+
+model Question {
+  id         Int           @id @default(autoincrement())
+  lessonId   Int
+  text       String
+  options    String        // Store JSON array of multiple-choice options
+  correctAnswer String
+  attempts   UserAttempt[]
+
+  lesson     Lesson       @relation(fields: [lessonId], references: [id])
+}
+
+model UserProgress {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  lessonId   Int
+  completedAt DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  lesson     Lesson   @relation(fields: [lessonId], references: [id])
+}
+model UserAttempt {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  questionId Int
+  isCorrect  Boolean
+  attemptedAt DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id])
+}
+
+model UserPoint {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  points    Int
+  earnedAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Achievement {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  pointsRequired Int
+  description String?
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  achievementId Int
+  unlockedAt    DateTime @default(now())
+
+  user          User         @relation(fields: [userId], references: [id])
+  achievement   Achievement  @relation(fields: [achievementId], references: [id])
+}
