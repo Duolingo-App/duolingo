@@ -8,10 +8,37 @@ async function main() {
   const languages = ['English', 'French', 'Spanish', 'German'];
   const userLanguages = await Promise.all(
     languages.map(async (lang) => {
-      return await prisma.userLanguage.create({
-        data: {
+      return await prisma.userLanguage.upsert({
+        where: { name: lang },
+        update: {},
+        create: {
           name: lang,
-          flag: faker.image.imageUrl(100, 100, 'flags', true), // Random flag image
+          flag: faker.image.urlLoremFlickr({ 
+            width: 100, 
+            height: 100, 
+            category: 'flag',
+            randomize: true 
+          }),
+        },
+      });
+    })
+  );
+
+  // Seed Languages
+  const languageModels = await Promise.all(
+    languages.map(async (lang) => {
+      return await prisma.language.upsert({
+        where: { name: lang },
+        update: {},
+        create: {
+          name: lang,
+          description: `Language model for ${lang}`,
+          flag: faker.image.urlLoremFlickr({ 
+            width: 100, 
+            height: 100, 
+            category: 'flag',
+            randomize: true 
+          }),
         },
       });
     })
@@ -19,7 +46,7 @@ async function main() {
 
   // Seed Lessons
   const lessons = await Promise.all(
-    userLanguages.map(async (language) => {
+    languageModels.map(async (language) => {
       return await prisma.lesson.create({
         data: {
           title: faker.lorem.sentence(),
@@ -49,7 +76,7 @@ async function main() {
     userLanguages.map(async (language) => {
       return await prisma.user.create({
         data: {
-          name: faker.name.fullName(),
+          name: faker.person.fullName(),
           email: faker.internet.email(),
           password: 'password123',
           languageId: language.id,
