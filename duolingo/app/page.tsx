@@ -1,15 +1,16 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight, ChevronLeft } from "lucide-react"
 import { Button } from "@/app/components/ui/btn"
+import { useRouter } from "next/navigation";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/app/components/ui/drodropdown-menu"
-import languageSelector from "@/app/onboarding/language-selector"
 import home from "@/public/img/img11.jpg"
 import img2 from "@/public/img/img2.png"
 import img3 from "@/public/img/img3.png"
 import img4 from "@/public/img/img4.png"
 import img5 from "@/public/img/img5.png"
-
 
 
 const languages = [
@@ -23,6 +24,7 @@ const languages = [
 ]
 
 export default function Page() {
+  const router = useRouter()
   return (
     <div className="min-h-screen flex flex-col">
       <header className="flex justify-between items-center px-4 py-6 md:px-6 border-b">
@@ -82,7 +84,9 @@ export default function Page() {
                 The free, fun, and effective way to learn a language!
               </h1>
               <div className="flex flex-col gap-3 w-full max-w-[320px]">
-                <Button className="w-full h-12 text-[15px] font-bold bg-[#58CC02] hover:bg-[#4CAF00] text-white rounded-2xl">
+                <Button
+                  className="w-full h-12 text-[15px] font-bold bg-[#58CC02] hover:bg-[#4CAF00] text-white rounded-2xl"
+                >
                   GET STARTED
                 </Button>
                 <Button

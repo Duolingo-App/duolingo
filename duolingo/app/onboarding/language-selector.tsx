@@ -4,14 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from "react"
 import { ChevronDown } from "lucide-react"
 
-const router = useRouter();
 
-const navigateToLanguageSelector = () => {
-  router.push({
-    pathname: '/language-selector',
-    query: {},
-  });
-};
 
 const languages = [
   { id: "en", name: "Anglais", members: "15,6 M membres", flag: "🇺🇸" },
@@ -54,7 +47,8 @@ const languageOptions = [
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false)
-
+  const router = useRouter()
+  
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-[1080px] px-6 py-4">
