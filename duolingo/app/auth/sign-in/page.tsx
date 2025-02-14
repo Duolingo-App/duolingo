@@ -68,7 +68,7 @@ export default function SignIn() {
         {/* ✅ Remove Link - Use button directly */}
         <button 
           onClick={handleLogin} 
-          className="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600 transition"
+          className="bg-green-500 text-white p-2 rounded w-full hover:bg-green-600 transition"
         >
           Sign In
         </button>

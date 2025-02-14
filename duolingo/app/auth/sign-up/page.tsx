@@ -73,7 +73,7 @@ export default function SignUp() {
 
         <button 
           onClick={handleRegister} 
-          className="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600 transition"
+          className="bg-green-500 text-white p-2 rounded w-full hover:bg-green-600 transition"
         >
           Sign Up
         </button>
