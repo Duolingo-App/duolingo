@@ -106,4 +106,3 @@ model UserAchievement {
   user          User         @relation(fields: [userId], references: [id])
   achievement   Achievement  @relation(fields: [achievementId], references: [id])
 }
-// " npx prisma migrate dev --schema=prisma/schema/schema.prisma --name init"
