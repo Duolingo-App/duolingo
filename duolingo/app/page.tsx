@@ -17,9 +17,10 @@ export default function HomePage() {
   }, [router])
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      {/* Add a loading state */}
-      <div className="animate-pulse">Loading...</div>
+    <div>
+      hiii
     </div>
   )
 }
+
+

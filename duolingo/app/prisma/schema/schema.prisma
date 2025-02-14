@@ -6,13 +6,6 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-enum QuestionType {
-  TRANSLATE
-  SELECT
-  ARRANGE
-  LISTEN
-  SPEAK
-}
 
 model UserLanguage {
   id          Int       @id @default(autoincrement())
@@ -52,7 +45,7 @@ model Lesson {
   description String?
   questions   Question[]
   progress    UserProgress[]
-
+  
   language    Language   @relation(fields: [languageId], references: [id])
 }
 
@@ -63,7 +56,6 @@ model Question {
   options    String        // Store JSON array of multiple-choice options
   correctAnswer String
   attempts   UserAttempt[]
-  type  QuestionType
 
   lesson     Lesson       @relation(fields: [lessonId], references: [id])
 }
