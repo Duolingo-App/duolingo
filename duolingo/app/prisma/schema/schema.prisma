@@ -20,19 +20,20 @@ model UserLanguage {
   flag        String
   users    User[] 
 }
-
 model User {
-  id             Int           @id @default(autoincrement())
-  email          String        @unique
-  password       String
-  name           String
-  languageId   Int           // Foreign key
-  language     UserLanguage  @relation(fields: [languageId], references: [id])
-  createdAt      DateTime      @default(now())
-  progress       UserProgress[]
-  attempts       UserAttempt[]
-  points         UserPoint[]
-  achievements   UserAchievement[]
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  password    String?
+  name        String
+  clerkId     String       @unique
+  image       String?
+  languageId  Int?         // Foreign key
+  language    UserLanguage? @relation(fields: [languageId], references: [id])
+  createdAt   DateTime     @default(now())
+  progress    UserProgress[]
+  attempts    UserAttempt[]
+  points      UserPoint[]
+  achievements UserAchievement[]
 }
 
 model Language {
