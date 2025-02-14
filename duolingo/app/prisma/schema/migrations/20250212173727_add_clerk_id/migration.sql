@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `user` ADD COLUMN `clerkId` VARCHAR(191) NOT NULL DEFAULT '',
+    ADD COLUMN `image` VARCHAR(191) NULL;
