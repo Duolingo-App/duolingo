@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, QuestionType } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
@@ -11,7 +11,7 @@ async function main() {
       return await prisma.userLanguage.create({
         data: {
           name: lang,
-          flag: faker.image.imageUrl(100, 100, 'flags', true), // Random flag image
+          flag: `https://flagcdn.com/w320/${lang.toLowerCase()}.png`, // Example static URL
         },
       });
     })
@@ -39,6 +39,7 @@ async function main() {
           text: faker.lorem.sentence(),
           options: JSON.stringify([faker.lorem.word(), faker.lorem.word(), faker.lorem.word(), faker.lorem.word()]),
           correctAnswer: faker.lorem.word(),
+          type: QuestionType.MULTIPLE_CHOICE,
         },
       });
     })
@@ -53,6 +54,7 @@ async function main() {
           email: faker.internet.email(),
           password: 'password123',
           languageId: language.id,
+          clerkId: faker.datatype.uuid(),
         },
       });
     })

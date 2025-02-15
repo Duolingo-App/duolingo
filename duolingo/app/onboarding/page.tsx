@@ -68,7 +68,7 @@ export default function OnboardingPage() {
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1)
     } else {
-      router.push('/exercise')
+      router.push('/homepage')
     }
   }
 

@@ -1,10 +1,9 @@
 "use client"
 
-import { useRouter } from 'next/router'
+
 import { useState } from "react"
 import { ChevronDown } from "lucide-react"
-
-
+import Link from "next/link"
 
 const languages = [
   { id: "en", name: "Anglais", members: "15,6 M membres", flag: "🇺🇸" },
@@ -47,7 +46,7 @@ const languageOptions = [
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false)
-  const router = useRouter()
+
   
   return (
     <div className="min-h-screen bg-white">
@@ -77,9 +76,10 @@ export default function Page() {
               <div key={language.id} className="language-card cursor-pointer rounded-[20px] bg-white p-6">
                 <div className="flex flex-col items-center">
                   <div className="flag-container mb-4">
-                    <span className="text-[40px]">{language.flag}</span>
+                  
+                  <span className="text-[40px]">{language.flag}</span>  
                   </div>
-                  <h2 className="mb-1 text-[20px] font-bold text-[#4B4B4B]">{language.name}</h2>
+                  <Link href="/onboarding">       <h2 className="mb-1 text-[20px] font-bold text-[#4B4B4B]">{language.name}</h2>  </Link>
                   <p className="text-[14px] text-[#777777]">{language.members}</p>
                 </div>
               </div>
@@ -98,11 +98,17 @@ export default function Page() {
                     <span className="text-lg">{lang.flag}</span>
                     <span className="text-[14px] text-[#4B4B4B]">{lang.name}</span>
                   </button>
+
+
                 ))}
               </div>
+
+          
             </div>
           )}
         </main>
+
+
       </div>
     </div>
   )

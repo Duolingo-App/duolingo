@@ -7,6 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+   model Media {
+     id        Int      @id @default(autoincrement())
+     filename  String
+     filepath  String
+     mimetype  String
+     size      Int
+   }
+
+model Question {
+  id         Int           @id @default(autoincrement())
+  lessonId   Int
+  text       String
+  options    String        // Store JSON array of multiple-choice options
+  correctAnswer String
+  attempts   UserAttempt[]
+
+  lesson     Lesson       @relation(fields: [lessonId], references: [id])
+}
+
+
 model UserLanguage {
   id          Int       @id @default(autoincrement())
   name        String    @unique
@@ -49,16 +70,7 @@ model Lesson {
   language    Language   @relation(fields: [languageId], references: [id])
 }
 
-model Question {
-  id         Int           @id @default(autoincrement())
-  lessonId   Int
-  text       String
-  options    String        // Store JSON array of multiple-choice options
-  correctAnswer String
-  attempts   UserAttempt[]
 
-  lesson     Lesson       @relation(fields: [lessonId], references: [id])
-}
 
 model UserProgress {
   id         Int       @id @default(autoincrement())

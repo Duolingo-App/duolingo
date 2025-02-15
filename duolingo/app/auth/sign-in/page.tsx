@@ -35,7 +35,7 @@ export default function SignIn() {
       if (data.token) {
         localStorage.setItem("token", data.token); // Store token
         alert("Logged in successfully!");
-        router.push("/dashboard/home"); // Redirect to dashboard
+        router.push("/homepage"); // Redirect to dashboard
       } else {
         throw new Error("Token not found in response");
       }

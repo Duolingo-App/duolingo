@@ -40,11 +40,7 @@ const exercises: Exercise[] = [
     question: "Type what you hear",
     correctAnswer: "Good morning",
   },
-  {
-    type: "speak",
-    question: "Say this sentence: 'How are you?'",
-    correctAnswer: "How are you?",
-  },
+
 
 ]
 
