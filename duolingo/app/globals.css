@@ -1,3 +1,309 @@
 @tailwind base;
+@layer base {
+  h1 {
+    @apply 2xl:text-2xl lg:text-xl md:text-lg sm:text-lg my-3;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+  ul {
+    @apply list-disc ml-8;
+  }
+  ol {
+    @apply list-decimal ml-8;
+  }
+}
+
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  /* background-color:#F6FDFF ; */
+  top: 0px !important;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+.navbar {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FFF;
+  font-family: Arial;
+  width: 90%;
+  padding: 1%;
+  border-radius: 15px;
+  height: 87px;
+  margin: 20px auto 20px auto;
+  /* border: 2px solid black; */
+}
+
+.navbar a {
+  float: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #151269;
+  text-align: center;
+  line-height: 16.59px;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+/* .dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+} */
+
+.navbar a:hover,
+.dropdown:hover .dropbtn {
+ background-color: #faf8f8;
+   /* border-radius: 12px; */
+  /* padding: 12px; */
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-weight: bolder;
+  color: #151269;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #eee;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.request_quotation{
+  border-radius: 10px;
+  color: white !important;
+  background-color: #2DB0FF;
+  padding: 10px !important;
+}
+.request_quotation:hover{
+  background-color: #70beef !important;
+}
+.skiptranslate .VIpgJd-ZVi9od-ORHb-OEVmcd {
+  display: none;
+}
+
+div#google_translate_element div.goog-te-gadget-simple {
+  border: none;
+  background-color: transparent;
+  background-color: #1b4d7b;
+}
+
+div#google_translate_element
+  div.goog-te-gadget-simple
+  a.goog-te-menu-value:hover {
+  text-decoration: none;
+}
+
+div#google_translate_element
+  div.goog-te-gadget-simple
+  a.goog-te-menu-value
+  span {
+  color: #aaa;
+}
+
+div#google_translate_element
+  div.goog-te-gadget-simple
+  a.goog-te-menu-value
+  span:hover {
+  color: white;
+}
+
+.goog-te-gadget-icon {
+  display: none !important;
+}
+
+div#google_translate_element
+  div.goog-te-gadget-simple
+  a.goog-te-menu-value
+  span[style="color: rgb(213, 213, 213);"] {
+  display: none !important;
+}
+div#google_translate_element
+  div.goog-te-gadget-simple
+  a.goog-te-menu-value
+  span[style="color: rgb(118, 118, 118);"] {
+  display: none !important;
+}
+div#google_translate_element
+  div.goog-te-gadget-simple
+  a.goog-te-menu-value
+  span[style="color: rgb(155, 155, 155);"] {
+  display: none !important;
+}
+
+div#google_translate_element
+  div.goog-te-gadget-simple
+  a.goog-te-menu-value
+  span[style="border-left: 1px solid rgb(187, 187, 187);"] {
+  display: none !important;
+}
+div#google_translate_element
+  div.goog-te-gadget-simple
+  a.goog-te-menu-value
+  span[style="border-left-color: rgb(187, 187, 187); border-left-width: 1px; border-left-style: solid;"] {
+  display: none !important;
+}
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+.VIpgJd-ZVi9od-l4eHX-hSRGPd {
+  display: none;
+}
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget {
+    font-size: 14px !important; /* Or a responsive-friendly size */
+  }
+  
+  .goog-te-gadget .goog-te-combo {
+    color: rgb(103, 103, 130) !important;
+    padding: 4px 2px !important;
+    font-size: 14px !important; /* Instead of 900 */
+  }
+
+#google_translate_element img {
+  display: none !important;
+}
+
+
+
+.goog-te-gadget-simple {
+    @apply text-sm; /* Tailwind utility for small text */
+    /* or plain CSS: font-size: 14px; */
+    border: none !important;
+    background-color: transparent !important;
+  }
+  
+  .goog-te-combo {
+    @apply text-sm;
+    /* or plain CSS: font-size: 14px; */
+    color: #676782 !important;
+    padding: 4px 2px !important;
+  }
+  
+  /* Hide the Google icon, if desired */
+  .goog-te-gadget-icon,
+  .goog-logo-link {
+    display: none !important;
+  }
+  #google_translate_element {
+    float: right;
+  }
+
+  .VIpgJd-ZVi9od-aZ2wEe {
+    display: none !important;
+  }
+
+
+  .skiptranslate.goog-te-gadget {
+    visibility: hidden !important; /* makes text invisible but keeps layout */
+  }
+  
+  /* Make the language text and dropdown visible again */
+  .skiptranslate.goog-te-gadget #\:0\.targetLanguage,
+  .skiptranslate.goog-te-gadget .goog-te-combo {
+    visibility: visible !important;
+  }
+
+ /* Style the <select> dropdown */
+.goog-te-combo {
+    border: 2px solid #58CC02 !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    background-color: #fff !important;
+    color: #333 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    outline: none !important;
+    cursor: pointer !important;
+  
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+  
+  /* Hover/focus on the <select> itself */
+  .goog-te-combo:hover,
+  .goog-te-combo:focus {
+    border-color: #4CAF00 !important;
+  }
+  
+  /* General styling for options */
+  .goog-te-combo option {
+    padding: 8px 12px !important;
+    background-color: #fff !important;
+    color: #333 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
+  
+  /* Attempt to force a green hover (works in limited browsers) */
+  .goog-te-combo option:hover {
+    background-color: #58CC02 !important;
+    color: #fff !important;
+  }
+  
+  /* Attempt to force a green selected color */
+  .goog-te-combo option:checked {
+    background-color: #4CAF00 !important;
+    color: #fff !important;
+  }
+  

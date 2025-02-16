@@ -11,6 +11,7 @@ import img2 from "@/public/img/img2.png"
 import img3 from "@/public/img/img3.png"
 import img4 from "@/public/img/img4.png"
 import img5 from "@/public/img/img5.png"
+import GoogleTranslator from "./components/GoogleTranslator"
 
 
 
@@ -20,7 +21,11 @@ export default function Page() {
 
   return (
     <div className="min-h-screen flex flex-col">
+
+       
+
       <header className="flex justify-between items-center px-4 py-6 md:px-6 border-b">
+          
         <div className="flex items-center gap-2">
           <Image
             src="https://d35aaqx5ub95lt.cloudfront.net/vendor/70a4be81077a8037698067f583816ff9.svg"
@@ -30,32 +35,7 @@ export default function Page() {
             className="w-32 md:w-38"
           />
         </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger className="text-[#777] hover:text-[#555] flex items-center gap-1 text-sm">
-            SITE LANGUAGE: ENGLISH
-            <ChevronRight className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[320px]">
-            <div className="grid grid-cols-2 gap-2 p-2">
-              {[
-                { flag: "🇸🇦", name: "العربية" },
-                { flag: "🇧🇩", name: "বাংলা" },
-                { flag: "🇨🇿", name: "Čeština" },
-                { flag: "🇩🇪", name: "Deutsch" },
-                { flag: "🇬🇷", name: "Ελληνικά" },
-                { flag: "🇺🇸", name: "English" },
-                { flag: "🇪🇸", name: "Español" },
-                { flag: "🇫🇷", name: "Français" },
-              ].map((lang) => (
-                <DropdownMenuItem key={lang.name} className="flex items-center gap-2">
-                  <span>{lang.flag}</span>
-                  <span>{lang.name}</span>
-                </DropdownMenuItem>
-              ))}
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <GoogleTranslator/> 
       </header>
 
       <main className="flex-1 flex flex-col">
