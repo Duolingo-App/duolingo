@@ -6,31 +6,40 @@ export async function GET(
   { params }: { params: { questionId: string } }
 ) {
   try {
-    console.log("Fetching question ID:", params.questionId);
-    
+    // Await params before accessing its properties
+    const { questionId } = await params;
+    const parsedQuestionId = parseInt(questionId);
+
+    if (isNaN(parsedQuestionId)) {
+      throw new Error("Invalid question ID");
+    }
+
     const question = await db.question.findUnique({
-      where: {
-        id: parseInt(params.questionId)
+      where: { id: parsedQuestionId },
+      include: {
+        lesson: {
+          include: {
+            language: true,
+          },
+        },
       },
     });
 
-    console.log("Found question:", question);
-
     if (!question) {
-      return NextResponse.json(
-        { error: `Question with ID ${params.questionId} not found` },
-        { status: 404 }
-      );
+      throw new Error("Question not found");
     }
+
+    // Parse the options field as JSON
+    const parsedOptions = JSON.parse(question.options);
 
     return NextResponse.json({
       ...question,
-      options: JSON.parse(question.options.toString()),
+      options: parsedOptions,
     });
   } catch (error) {
-    console.error("Database error:", error);
+    console.error("Error fetching question:", error);
     return NextResponse.json(
-      { error: "Failed to fetch question" },
+      { error: error.message },
       { status: 500 }
     );
   }

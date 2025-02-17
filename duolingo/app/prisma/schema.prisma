@@ -6,6 +6,13 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+enum QuestionType {
+  TRANSLATE
+  SELECT
+  ARRANGE
+  LISTEN
+  SPEAK
+}
 
 model UserLanguage {
   id          Int       @id @default(autoincrement())
@@ -50,14 +57,14 @@ model Lesson {
 }
 
 model Question {
-  id         Int           @id @default(autoincrement())
-  lessonId   Int
-  text       String
-  options    String        // Store JSON array of multiple-choice options
+  id            Int           @id @default(autoincrement())
+  lessonId      Int
+  text          String
+  options       String
   correctAnswer String
-  attempts   UserAttempt[]
-
-  lesson     Lesson       @relation(fields: [lessonId], references: [id])
+  type          String
+  attempts      Attempt[]
+  lesson        Lesson        @relation(fields: [lessonId], references: [id])
 }
 
 model UserProgress {
@@ -77,7 +84,7 @@ model UserAttempt {
   attemptedAt DateTime @default(now())
 
   user       User     @relation(fields: [userId], references: [id])
-  question   Question @relation(fields: [questionId], references: [id])
+  // question   Question @relation(fields: [questionId], references: [id])
 }
 
 model UserPoint {
@@ -105,4 +112,14 @@ model UserAchievement {
 
   user          User         @relation(fields: [userId], references: [id])
   achievement   Achievement  @relation(fields: [achievementId], references: [id])
+}
+
+model Attempt {
+  id          Int      @id @default(autoincrement())
+  questionId  Int
+  isCorrect   Boolean
+  answer      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  question    Question @relation(fields: [questionId], references: [id])
 }

@@ -1,127 +1,132 @@
 import { PrismaClient } from '@prisma/client';
-import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Seed UserLanguages
-  const languages = ['English', 'French', 'Spanish', 'German'];
-  const userLanguages = await Promise.all(
-    languages.map(async (lang) => {
-      return await prisma.userLanguage.create({
-        data: {
-          name: lang,
-          flag: faker.image.imageUrl(100, 100, 'flags', true), // Random flag image
-        },
-      });
-    })
-  );
+  // Check if the Language record already exists
+  const existingLanguage = await prisma.language.findUnique({
+    where: { name: 'French' },
+  });
 
-  // Seed Lessons
-  const lessons = await Promise.all(
-    userLanguages.map(async (language) => {
-      return await prisma.lesson.create({
-        data: {
-          title: faker.lorem.sentence(),
-          description: faker.lorem.paragraph(),
-          languageId: language.id,
-        },
-      });
-    })
-  );
-
-  // Seed Questions
-  const questions = await Promise.all(
-    lessons.map(async (lesson) => {
-      return await prisma.question.create({
-        data: {
-          lessonId: lesson.id,
-          text: faker.lorem.sentence(),
-          options: JSON.stringify([faker.lorem.word(), faker.lorem.word(), faker.lorem.word(), faker.lorem.word()]),
-          correctAnswer: faker.lorem.word(),
-        },
-      });
-    })
-  );
-
-  // Seed Users
-  const users = await Promise.all(
-    userLanguages.map(async (language) => {
-      return await prisma.user.create({
-        data: {
-          name: faker.name.fullName(),
-          email: faker.internet.email(),
-          password: 'password123',
-          languageId: language.id,
-        },
-      });
-    })
-  );
-
-  // Seed UserProgress
-  await Promise.all(
-    users.map(async (user, index) => {
-      return await prisma.userProgress.create({
-        data: {
-          userId: user.id,
-          lessonId: lessons[index % lessons.length].id, // Assign lessons in a round-robin fashion
-        },
-      });
-    })
-  );
-
-  // Seed UserAttempts
-  await Promise.all(
-    users.map(async (user) => {
-      return await prisma.userAttempt.create({
-        data: {
-          userId: user.id,
-          questionId: questions[Math.floor(Math.random() * questions.length)].id, // Randomly assign questions
-          isCorrect: Math.random() > 0.5, // Randomly determine if the answer is correct
-        },
-      });
-    })
-  );
-
-  // Seed UserPoints
-  await Promise.all(
-    users.map(async (user) => {
-      return await prisma.userPoint.create({
-        data: {
-          userId: user.id,
-          points: Math.floor(Math.random() * 100), // Random points between 0 and 100
-        },
-      });
-    })
-  );
-
-  // Seed Achievements
-  const achievement1 = await prisma.achievement.create({
+  // If it doesn't exist, create it
+  const language = existingLanguage || await prisma.language.create({
     data: {
-      name: 'First Lesson Completed',
-      pointsRequired: 10,
-      description: 'Complete your first lesson.',
+      name: 'French',
+      description: 'Learn French',
+      flag: '🇫🇷',
     },
   });
 
-  // Seed UserAchievements
-  await Promise.all(
-    users.map(async (user) => {
-      return await prisma.userAchievement.create({
-        data: {
-          userId: user.id,
-          achievementId: achievement1.id,
-        },
-      });
-    })
-  );
+  // Create 2 lessons
+  const lesson1 = await prisma.lesson.create({
+    data: {
+      title: 'Lesson 1: Basics',
+      description: 'Learn the basics of the language',
+      language: {
+        connect: { id: language.id },
+      },
+    },
+  });
 
-  console.log('Seeding completed successfully!');
+  const lesson2 = await prisma.lesson.create({
+    data: {
+      title: 'Lesson 2: Advanced',
+      description: 'Advanced language concepts',
+      language: {
+        connect: { id: language.id },
+      },
+    },
+  });
+
+  // Questions for Lesson 1
+  await prisma.question.createMany({
+    data: [
+      {
+        lessonId: lesson1.id,
+        text: 'TRANSLATE "Hello"',
+        options: JSON.stringify([]), // No options for translation
+        correctAnswer: 'Bonjour',
+        type: 'TRANSLATE',
+      },
+      {
+        lessonId: lesson1.id,
+        text: 'What is "Goodbye" in French?',
+        options: JSON.stringify(['Bonjour', 'Au revoir', 'Merci', "S\'il vous plaît"]), // Correct JSON format
+        correctAnswer: 'Au revoir',
+        type: 'SELECT',
+      },
+      {
+        lessonId: lesson1.id,
+        text: 'Arrange the words: "I / am / learning"',
+        options: JSON.stringify(["I", "am", "learning"]), // Correct JSON format
+        correctAnswer: 'I am learning',
+        type: 'ARRANGE',
+      },
+      {
+        lessonId: lesson1.id,
+        text: 'LISTEN to the audio and type what you hear',
+        options: JSON.stringify([]),
+        correctAnswer: 'Bonjour',
+        type: 'LISTEN',
+        audioUrl: '/audio/bonjour.mp3',
+      },
+      {
+        lessonId: lesson1.id,
+        text: 'SPEAK the phrase: "How are you?"',
+        options: JSON.stringify([]), // No options for SPEAKing
+        correctAnswer: 'How are you?',
+        type: 'SPEAK',
+      },
+    ],
+  });
+
+  // Questions for Lesson 2
+  await prisma.question.createMany({
+    data: [
+      {
+        lessonId: lesson2.id,
+        text: 'TRANSLATE "Thank you"',
+        options: JSON.stringify([]), // No options for translation
+        correctAnswer: 'Merci',
+        type: 'TRANSLATE',
+      },
+      {
+        lessonId: lesson2.id,
+        text: 'What is "Please" in French?',
+        options: JSON.stringify(["Bonjour", "Au revoir", "Merci"]), // Valid JSON array
+        correctAnswer: 'S\'il vous plaît',
+        type: 'SELECT', // Consistent lowercase
+      },
+      {
+        lessonId: lesson2.id,
+        text: 'ARRANGE the words: "The / cat / is / sleeping"',
+        options: JSON.stringify(['The', 'cat', 'is', 'sleeping']), // Valid JSON array
+        correctAnswer: 'The cat is sleeping',
+        type: 'ARRANGE', // Consistent lowercase
+      },
+      {
+        lessonId: lesson2.id,
+        text: 'LISTEN to the audio and type what you hear',
+        options: JSON.stringify([]), // No options for LISTENing
+        correctAnswer: 'Merci',
+        type: 'LISTEN',
+      },
+      {
+        lessonId: lesson2.id,
+        text: 'SPEAK the phrase: "Good morning"',
+        options: JSON.stringify([]), // No options for SPEAKing
+        correctAnswer: 'Good morning',
+        type: 'SPEAK',
+      },
+    ],
+  });
+
+  console.log('Seeding completed!');
 }
 
 main()
   .catch((e) => {
-    console.error('Error seeding data:', e);
+    console.error(e);
     process.exit(1);
   })
   .finally(async () => {
