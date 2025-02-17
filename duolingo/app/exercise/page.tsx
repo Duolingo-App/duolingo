@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { ArrowLeft } from "lucide-react"
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/app/components/ui/Button"
 import { ProgressBar } from "@/app/components/ui/progress-bar"
 import { Mascot } from "@/app/components/ui/mascot"
 

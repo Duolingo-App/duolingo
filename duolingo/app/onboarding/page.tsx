@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/app/components/ui/Button"
 import { ProgressBar } from "@/app/components/ui/progress-bar"
 import { OptionCard } from "@/app/components/ui/option-card"
 import { Mascot } from "@/app/components/ui/mascot"
