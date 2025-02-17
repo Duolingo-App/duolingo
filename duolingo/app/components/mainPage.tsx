@@ -1,13 +1,12 @@
 "use client"
 
-import { useState ,useEffect} from "react"
+import { useState, useEffect, useContext } from "react"
 import { motion } from "framer-motion"
 import { UnitPath } from "../components/learning-path/unit-path"
 import { CharacterMascot } from "../components/character-mascot"
 import type { Unit } from "@/app/types/duolingo"
 import { useRouter } from "next/navigation" // Changed from 'next/router'
-
-
+import { AuthContext } from "@/app/context/AuthContext" // Import AuthContext
 
 export default function Home() {
   const [units, setUnits] = useState<Unit[]>([])
@@ -15,13 +14,28 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
   const router = useRouter()
+  const useAuth = useContext(AuthContext)
+   // Access the user from AuthContext
+   const user = useAuth?.user
+
   useEffect(() => {
     const fetchUnits = async () => {
       try {
-        const response = await fetch('/api/units') // Adjust the URL as needed
-        if (!response.ok) {
-          throw new Error('Failed to fetch units')
+        const token = localStorage.getItem("token") // Get the access token
+        if (!token) {
+          throw new Error("No access token found")
         }
+
+        const response = await fetch("/api/units", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the Bearer token
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch units")
+        }
+
         const data = await response.json()
         setUnits(data)
       } catch (err:any) {
@@ -50,6 +64,14 @@ export default function Home() {
   }
   return (
     <div className="max-w-3xl mx-auto space-y-12 py-8">
+      {/* Display user information */}
+      {user && (
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Welcome, {user.name}!</h1>
+          <p className="text-gray-500">Email: {user.email}</p>
+        </div>
+      )}
+
       {units.map((unit, index) => (
         <motion.div
           key={unit.id}

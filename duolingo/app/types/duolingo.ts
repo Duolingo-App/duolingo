@@ -27,3 +27,11 @@ export interface XPProgress {
   }>
 }
 
+export interface question {
+  id: number;
+  lessonId: number;
+  text: string;
+  options: string; // JSON string
+  correctAnswer: string;
+  type: string;
+}
