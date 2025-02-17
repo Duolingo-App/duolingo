@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 import { ProgressBar } from "@/app/components/ui/progress-bar";
 import { Mascot } from "@/app/components/ui/mascot";
+import { question } from "@/app/types/duolingo";
 
 export default function ExercisePage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function ExercisePage() {
         });
         setError(null);
         setProgress(calculateProgress(questionId));
-      } catch (err) {
+      } catch (err:any) {
         setError(err.message);
       } finally {
         setIsLoading(false);
@@ -46,7 +47,7 @@ export default function ExercisePage() {
 
   const handleCheck = () => {
     const userAnswer = answer.trim().toLowerCase();
-    const correctAnswer = question.correctAnswer.trim().toLowerCase();
+    const correctAnswer = question?.correctAnswer.trim().toLowerCase() || '';
 
     const correct = userAnswer === correctAnswer;
     setIsCorrect(correct);

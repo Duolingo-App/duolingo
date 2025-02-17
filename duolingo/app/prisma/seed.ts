@@ -68,7 +68,7 @@ async function main() {
         options: JSON.stringify([]),
         correctAnswer: 'Bonjour',
         type: 'LISTEN',
-        audioUrl: '/audio/bonjour.mp3',
+       
       },
       {
         lessonId: lesson1.id,
