@@ -17,7 +17,7 @@ export function LessonNode({ type, position = "middle" }: LessonNodeProps) {
 
   const iconStyles = {
     locked: "text-gray-400 w-6 h-6",
-    active: "text-[#58cc02] w-8 h-8",
+    active: "text-[#58cc02] w-8 h-8 font-bold",
     completed: "text-white w-8 h-8",
   }
 
@@ -28,7 +28,7 @@ export function LessonNode({ type, position = "middle" }: LessonNodeProps) {
       ) : type === "completed" ? (
         <Star className={iconStyles.completed} />
       ) : (
-        <div className={`${iconStyles.active} font-bold`}>1</div>
+        <div className={iconStyles.active}></div>
       )}
 
       {/* Crown for completed lessons */}
@@ -40,4 +40,3 @@ export function LessonNode({ type, position = "middle" }: LessonNodeProps) {
     </div>
   )
 }
-
