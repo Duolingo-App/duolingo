@@ -12,9 +12,8 @@ import img3 from "@/public/img/img3.png"
 import img4 from "@/public/img/img4.png"
 import img5 from "@/public/img/img5.png"
 
-
 const languages = [
-  { code: "SPANISH", flag: "🇪🇸" },
+  { code: "SPANISH", flag: "" },
   { code: "FRENCH", flag: "🇫🇷" },
   { code: "GERMAN", flag: "🇩🇪" },
   { code: "ITALIAN", flag: "🇮🇹" },
