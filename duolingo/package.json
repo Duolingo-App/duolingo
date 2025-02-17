@@ -6,13 +6,18 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "seed": "ts-node app/prisma/seed.ts",
+    "seed": "ts-node app/prisma/seed",
     "lint": "next lint"
+  },
+  "prisma": {
+    "schema": "prisma/schema/schema.prisma"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.0.0",
     "@prisma/client": "^6.3.1",
+    "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-progress": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.2",
     "autoprefixer": "^10.4.20",
     "bcrypt": "^5.1.1",
@@ -31,7 +36,8 @@
     "react-dom": "^19.0.0",
     "react-spinners": "^0.15.0",
     "swr": "^2.3.2",
-    "tailwind-merge": "^3.0.1"
+    "tailwind-merge": "^3.0.1",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -47,8 +53,5 @@
     "prisma": "^6.3.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
-  },
-  "prisma": {
-    "schema": "prisma/schema.prisma"
   }
 }

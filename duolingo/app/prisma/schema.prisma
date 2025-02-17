@@ -34,33 +34,52 @@ model User {
   attempts    UserAttempt[]
   points      UserPoint[]
   achievements UserAchievement[]
+    hearts      Heart[]
 }
-
+model Heart{
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  heartCount  Int         @default(5)
+  payment   Boolean
+  createdAt   DateTime     @default(now())
+  user        User         @relation(fields: [userId], references: [id])
+}
 model Language {
   id          Int       @id @default(autoincrement())
   name        String    @unique
   description String?
-  lessons     Lesson[]
+  units       Unit[]
   flag        String
 }
 
+model Unit {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  color       String
+  guidebook  Boolean  @default(true)
+  languageId  Int      // Foreign key to Language
+  lessons     Lesson[] // A unit has many lessons
+  language    Language @relation(fields: [languageId], references: [id])
+}
 
 model Lesson {
   id          Int          @id @default(autoincrement())
-  languageId  Int
+  unitId      Int 
   title       String
   description String?
   questions   Question[]
   progress    UserProgress[]
   
-  language    Language   @relation(fields: [languageId], references: [id])
+  unit    Unit   @relation(fields: [unitId], references: [id])
 }
 
 model Question {
   id            Int           @id @default(autoincrement())
   lessonId      Int
-  text          String
-  options       String
+  text          String  
+  options    String?
+  hint       String?        // Store JSON array of multiple-choice options
   correctAnswer String
   type          String
   attempts      Attempt[]

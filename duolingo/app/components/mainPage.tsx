@@ -1,56 +1,77 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useContext } from "react"
 import { motion } from "framer-motion"
 import { UnitPath } from "../components/learning-path/unit-path"
 import { CharacterMascot } from "../components/character-mascot"
 import type { Unit } from "@/app/types/duolingo"
-
-// Sample data - in a real app, this would come from an API
-const units: Unit[] = [
-  {
-    id: "unit-1",
-    title: "Unit 1",
-    description: "Form basic sentences, greet people",
-    color: "green",
-    guidebook: true,
-    lessons: [
-      { id: "1-1", status: "completed", position: 0, xpPoints: 10, title: "Basics 1" },
-      { id: "1-2", status: "completed", position: 1, xpPoints: 10, title: "Basics 2" },
-      { id: "1-3", status: "active", position: 2, xpPoints: 15, title: "Phrases" },
-      { id: "1-4", status: "locked", position: 3, xpPoints: 15, title: "Greetings" },
-      { id: "1-5", status: "locked", position: 4, xpPoints: 20, title: "Review" },
-    ],
-  },
-  {
-    id: "unit-2",
-    title: "Unit 2",
-    description: "Get around in a city",
-    color: "purple",
-    guidebook: true,
-    lessons: Array(5)
-      .fill(null)
-      .map((_, i) => ({
-        id: `2-${i + 1}`,
-        status: "locked",
-        position: i,
-        xpPoints: 15,
-        title: `Lesson ${i + 1}`,
-      })),
-  },
-  // Add more units as needed
-]
+import { useRouter } from "next/navigation" // Changed from 'next/router'
+import { AuthContext } from "@/app/context/AuthContext" // Import AuthContext
 
 export default function Home() {
+  const [units, setUnits] = useState<Unit[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
+  const router = useRouter()
+  const useAuth = useContext(AuthContext)
+   // Access the user from AuthContext
+   const user = useAuth?.user
+
+  useEffect(() => {
+    const fetchUnits = async () => {
+      try {
+        const token = localStorage.getItem("token") // Get the access token
+        if (!token) {
+          throw new Error("No access token found")
+        }
+
+        const response = await fetch("/api/units", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the Bearer token
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch units")
+        }
+
+        const data = await response.json()
+        setUnits(data)
+      } catch (err:any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUnits()
+  }, [])
 
   const handleLessonClick = (lessonId: string) => {
     setSelectedLesson(lessonId)
+    router.push(`/exercise/${lessonId}`)
+    console.log(`Selected lesson: ${lessonId}`)
     // Handle lesson selection logic
   }
 
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>
+  }
   return (
     <div className="max-w-3xl mx-auto space-y-12 py-8">
+      {/* Display user information */}
+      {user && (
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Welcome, {user.name}!</h1>
+          <p className="text-gray-500">Email: {user.email}</p>
+        </div>
+      )}
+
       {units.map((unit, index) => (
         <motion.div
           key={unit.id}

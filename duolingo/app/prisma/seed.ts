@@ -17,13 +17,25 @@ async function main() {
     },
   });
 
-  // Create 2 lessons
+  // Create a unit
+  const unit = await prisma.unit.create({
+    data: {
+      title: 'Unit 1: Basics',
+      description: 'Learn the basics of the language',
+      color: '#58CC02',
+      language: {
+        connect: { id: language.id },
+      },
+    },
+  });
+
+  // Now create lessons
   const lesson1 = await prisma.lesson.create({
     data: {
       title: 'Lesson 1: Basics',
       description: 'Learn the basics of the language',
-      language: {
-        connect: { id: language.id },
+      unit: {
+        connect: { id: unit.id },
       },
     },
   });
@@ -32,8 +44,8 @@ async function main() {
     data: {
       title: 'Lesson 2: Advanced',
       description: 'Advanced language concepts',
-      language: {
-        connect: { id: language.id },
+      unit: {
+        connect: { id: unit.id },
       },
     },
   });
@@ -44,23 +56,26 @@ async function main() {
       {
         lessonId: lesson1.id,
         text: 'TRANSLATE "Hello"',
-        options: JSON.stringify([]), // No options for translation
+        options: JSON.stringify([]),
         correctAnswer: 'Bonjour',
         type: 'TRANSLATE',
+        
       },
       {
         lessonId: lesson1.id,
         text: 'What is "Goodbye" in French?',
-        options: JSON.stringify(['Bonjour', 'Au revoir', 'Merci', "S\'il vous plaît"]), // Correct JSON format
+        options: JSON.stringify(['Bonjour', 'Au revoir', 'Merci', "S'il vous plaît"]),
         correctAnswer: 'Au revoir',
         type: 'SELECT',
+        
       },
       {
         lessonId: lesson1.id,
         text: 'Arrange the words: "I / am / learning"',
-        options: JSON.stringify(["I", "am", "learning"]), // Correct JSON format
+        options: JSON.stringify(["I", "am", "learning"]),
         correctAnswer: 'I am learning',
         type: 'ARRANGE',
+        
       },
       {
         lessonId: lesson1.id,
@@ -68,14 +83,15 @@ async function main() {
         options: JSON.stringify([]),
         correctAnswer: 'Bonjour',
         type: 'LISTEN',
-       
+        
       },
       {
         lessonId: lesson1.id,
         text: 'SPEAK the phrase: "How are you?"',
-        options: JSON.stringify([]), // No options for SPEAKing
+        options: JSON.stringify([]),
         correctAnswer: 'How are you?',
         type: 'SPEAK',
+        
       },
     ],
   });
@@ -86,35 +102,38 @@ async function main() {
       {
         lessonId: lesson2.id,
         text: 'TRANSLATE "Thank you"',
-        options: JSON.stringify([]), // No options for translation
+        options: JSON.stringify([]),
         correctAnswer: 'Merci',
         type: 'TRANSLATE',
+        
       },
       {
         lessonId: lesson2.id,
         text: 'What is "Please" in French?',
-        options: JSON.stringify(["Bonjour", "Au revoir", "Merci"]), // Valid JSON array
+        options: JSON.stringify(["Bonjour", "Au revoir", "Merci"]),
         correctAnswer: 'S\'il vous plaît',
-        type: 'SELECT', // Consistent lowercase
+        type: 'SELECT',
+        
       },
       {
         lessonId: lesson2.id,
         text: 'ARRANGE the words: "The / cat / is / sleeping"',
-        options: JSON.stringify(['The', 'cat', 'is', 'sleeping']), // Valid JSON array
+        options: JSON.stringify(['The', 'cat', 'is', 'sleeping']),
         correctAnswer: 'The cat is sleeping',
-        type: 'ARRANGE', // Consistent lowercase
+        type: 'ARRANGE',
+        
       },
       {
         lessonId: lesson2.id,
         text: 'LISTEN to the audio and type what you hear',
-        options: JSON.stringify([]), // No options for LISTENing
+        options: JSON.stringify([]),
         correctAnswer: 'Merci',
         type: 'LISTEN',
       },
       {
         lessonId: lesson2.id,
         text: 'SPEAK the phrase: "Good morning"',
-        options: JSON.stringify([]), // No options for SPEAKing
+        options: JSON.stringify([]),
         correctAnswer: 'Good morning',
         type: 'SPEAK',
       },

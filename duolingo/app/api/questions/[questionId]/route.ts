@@ -6,38 +6,43 @@ export async function GET(
   { params }: { params: { questionId: string } }
 ) {
   try {
-    // Await params before accessing its properties
-    const { questionId } = await params;
-    const parsedQuestionId = parseInt(questionId);
-
-    if (isNaN(parsedQuestionId)) {
-      throw new Error("Invalid question ID");
+    const lessonId = await parseInt(params?.questionId);
+    if (isNaN(lessonId)) {
+      throw new Error("Invalid lesson ID");
     }
 
-    const question = await db.question.findUnique({
-      where: { id: parsedQuestionId },
+    // Fetch the lesson and include all its questions with attempts
+    const lesson = await db.lesson.findUnique({
+      where: { id: lessonId },
       include: {
-        lesson: {
+        questions: {
           include: {
-            language: true,
+            attempts: true, // Include attempts for each question
           },
         },
       },
     });
 
-    if (!question) {
-      throw new Error("Question not found");
+    if (!lesson) {
+      console.error(`Lesson with ID ${lessonId} not found`);
+      return NextResponse.json(
+        { error: `Lesson with ID ${lessonId} not found` },
+        { status: 404 }
+      );
     }
 
-    // Parse the options field as JSON
-    const parsedOptions = JSON.parse(question.options);
+    // Parse the options field for each question
+    const parsedQuestions = lesson.questions.map((q) => ({
+      ...q,
+      options: JSON.parse(q.options),
+    }));
 
     return NextResponse.json({
-      ...question,
-      options: parsedOptions,
+      ...lesson,
+      questions: parsedQuestions,
     });
   } catch (error) {
-    console.error("Error fetching question:", error);
+    console.error("Error fetching lesson and questions:", error);
     return NextResponse.json(
       { error: error.message },
       { status: 500 }
