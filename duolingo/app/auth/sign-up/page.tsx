@@ -10,15 +10,22 @@ export default function SignUp() {
     password: "",
   });
   const [error, setError] = useState("");
+  const [image, setImage] = useState<File | null>(null);
 
   async function handleRegister() {
     setError(""); // Clear error before making the request
 
     try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("password", formData.password);
+      if (image) {
+        formDataToSend.append("image", image);
+      }
       const res = await fetch("/api/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
 
       // Check if the response is valid JSON
@@ -68,6 +75,12 @@ export default function SignUp() {
           placeholder="Password"
           value={formData.password}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          className="border border-gray-300 p-2 mb-4 rounded w-full"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files?.[0] || null)}
           className="border border-gray-300 p-2 mb-4 rounded w-full"
         />
 

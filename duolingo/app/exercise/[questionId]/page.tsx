@@ -8,7 +8,7 @@ import { Mascot } from "@/app/components/ui/mascot"
 import { HeartDepletedModal } from "@/app/components/ui/HeartDepletedModal"
 import { useParams } from "next/navigation"
 type ExerciseType = "TRANSLATE" | "SELECT" | "ARRANGE" | "SPEAK" | "LISTEN"
-
+console.log("useParam")
 interface Exercise {
   id: string|number
   type: ExerciseType

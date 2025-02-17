@@ -14,6 +14,18 @@ enum QuestionType {
   SPEAK
 }
 
+
+   model Media {
+     id        Int      @id @default(autoincrement())
+     filename  String
+     filepath  String
+     mimetype  String
+     size      Int
+   }
+
+
+
+
 model UserLanguage {
   id          Int       @id @default(autoincrement())
   name        String    @unique
@@ -35,7 +47,11 @@ model User {
   points      UserPoint[]
   achievements UserAchievement[]
     hearts      Heart[]
+  sentMessages Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
 }
+
+
 model Heart{
   id          Int          @id @default(autoincrement())
   userId      Int
