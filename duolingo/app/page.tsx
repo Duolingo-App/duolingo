@@ -5,7 +5,6 @@ import Link from "next/link"
 import { ChevronRight, ChevronLeft } from "lucide-react"
 import { Button } from "@/app/components/ui/btn"
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/app/components/ui/drodropdown-menu"
 import home from "@/public/img/img11.jpg"
 import img2 from "@/public/img/img2.png"
 import img3 from "@/public/img/img3.png"
