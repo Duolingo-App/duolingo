@@ -1,4 +1,15 @@
 -- CreateTable
+CREATE TABLE `Media` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `filename` VARCHAR(191) NOT NULL,
+    `filepath` VARCHAR(191) NOT NULL,
+    `mimetype` VARCHAR(191) NOT NULL,
+    `size` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `UserLanguage` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
@@ -133,6 +144,22 @@ CREATE TABLE `UserAchievement` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `Message` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `content` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `senderId` INTEGER NOT NULL,
+    `receiverId` INTEGER NOT NULL,
+    `isRead` BOOLEAN NOT NULL DEFAULT false,
+    `type` ENUM('TEXT', 'IMAGE', 'AUDIO', 'VIDEO') NOT NULL DEFAULT 'TEXT',
+    `parentMessageId` INTEGER NULL,
+    `readAt` DATETIME(3) NULL,
+    `deliveredAt` DATETIME(3) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `User` ADD CONSTRAINT `User_languageId_fkey` FOREIGN KEY (`languageId`) REFERENCES `UserLanguage`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -168,3 +195,12 @@ ALTER TABLE `UserAchievement` ADD CONSTRAINT `UserAchievement_userId_fkey` FOREI
 
 -- AddForeignKey
 ALTER TABLE `UserAchievement` ADD CONSTRAINT `UserAchievement_achievementId_fkey` FOREIGN KEY (`achievementId`) REFERENCES `Achievement`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Message` ADD CONSTRAINT `Message_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Message` ADD CONSTRAINT `Message_receiverId_fkey` FOREIGN KEY (`receiverId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Message` ADD CONSTRAINT `Message_parentMessageId_fkey` FOREIGN KEY (`parentMessageId`) REFERENCES `Message`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

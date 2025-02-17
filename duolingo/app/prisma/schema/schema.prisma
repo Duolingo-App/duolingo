@@ -7,6 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+   model Media {
+     id        Int      @id @default(autoincrement())
+     filename  String
+     filepath  String
+     mimetype  String
+     size      Int
+   }
+
+
+
+
 model UserLanguage {
   id          Int       @id @default(autoincrement())
   name        String    @unique
@@ -28,7 +40,11 @@ model User {
   points      UserPoint[]
   achievements UserAchievement[]
     hearts      Heart[]
+  sentMessages Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
 }
+
+
 model Heart{
   id          Int          @id @default(autoincrement())
   userId      Int
@@ -125,4 +141,35 @@ model UserAchievement {
 
   user          User         @relation(fields: [userId], references: [id])
   achievement   Achievement  @relation(fields: [achievementId], references: [id])
+}
+
+model Message {
+  id            Int      @id @default(autoincrement())
+  content       String
+  createdAt     DateTime @default(now())
+  
+  senderId      Int
+  sender        User     @relation("SentMessages", fields: [senderId], references: [id])
+  
+  receiverId    Int
+  receiver      User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  
+  isRead        Boolean  @default(false)
+  type          MessageType @default(TEXT)
+  
+  // New fields for enhanced messaging
+  parentMessageId Int?   // For thread/reply support
+  parentMessage   Message? @relation("MessageReplies", fields: [parentMessageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies        Message[] @relation("MessageReplies")
+  
+  // Metadata for tracking
+  readAt        DateTime?
+  deliveredAt   DateTime?
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  AUDIO
+  VIDEO
 }

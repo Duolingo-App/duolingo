@@ -4,29 +4,27 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight, ChevronLeft } from "lucide-react"
 import { Button } from "@/app/components/ui/btn"
-import { useRouter } from "next/navigation";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/app/components/ui/drodropdown-menu"
+
 import home from "@/public/img/img11.jpg"
 import img2 from "@/public/img/img2.png"
 import img3 from "@/public/img/img3.png"
 import img4 from "@/public/img/img4.png"
 import img5 from "@/public/img/img5.png"
-console.log("hiii")
-const languages = [
-  { code: "SPANISH", flag: "" },
-  { code: "FRENCH", flag: "🇫🇷" },
-  { code: "GERMAN", flag: "🇩🇪" },
-  { code: "ITALIAN", flag: "🇮🇹" },
-  { code: "PORTUGUESE", flag: "🇵🇹" },
-  { code: "DUTCH", flag: "🇳🇱" },
-  { code: "JAPANESE", flag: "🇯🇵" },
-]
+import GoogleTranslator from "./components/GoogleTranslator"
+
+
+
+
 
 export default function Page() {
-  const router = useRouter()
+
   return (
     <div className="min-h-screen flex flex-col">
+
+       
+
       <header className="flex justify-between items-center px-4 py-6 md:px-6 border-b">
+          
         <div className="flex items-center gap-2">
           <Image
             src="https://d35aaqx5ub95lt.cloudfront.net/vendor/70a4be81077a8037698067f583816ff9.svg"
@@ -36,32 +34,7 @@ export default function Page() {
             className="w-32 md:w-38"
           />
         </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger className="text-[#777] hover:text-[#555] flex items-center gap-1 text-sm">
-            SITE LANGUAGE: ENGLISH
-            <ChevronRight className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[320px]">
-            <div className="grid grid-cols-2 gap-2 p-2">
-              {[
-                { flag: "🇸🇦", name: "العربية" },
-                { flag: "🇧🇩", name: "বাংলা" },
-                { flag: "🇨🇿", name: "Čeština" },
-                { flag: "🇩🇪", name: "Deutsch" },
-                { flag: "🇬🇷", name: "Ελληνικά" },
-                { flag: "🇺🇸", name: "English" },
-                { flag: "🇪🇸", name: "Español" },
-                { flag: "🇫🇷", name: "Français" },
-              ].map((lang) => (
-                <DropdownMenuItem key={lang.name} className="flex items-center gap-2">
-                  <span>{lang.flag}</span>
-                  <span>{lang.name}</span>
-                </DropdownMenuItem>
-              ))}
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <GoogleTranslator/> 
       </header>
 
       <main className="flex-1 flex flex-col">
@@ -83,17 +56,27 @@ export default function Page() {
                 The free, fun, and effective way to learn a language!
               </h1>
               <div className="flex flex-col gap-3 w-full max-w-[320px]">
+                <Link href="/languageselection">
                 <Button
                   className="w-full h-12 text-[15px] font-bold bg-[#58CC02] hover:bg-[#4CAF00] text-white rounded-2xl"
                 >
                   GET STARTED
                 </Button>
+                </Link>
+                
+
+
+                <Link href="/auth/sign-up">
                 <Button
                   variant="outline"
                   className="w-full h-12 text-[15px] font-bold text-[#1CB0F6] border-[#1CB0F6] hover:bg-[#1CB0F6]/5 rounded-2xl"
                 >
                   I ALREADY HAVE AN ACCOUNT
                 </Button>
+                </Link>
+         
+         
+
               </div>
             </div>
           </div>
@@ -111,7 +94,7 @@ export default function Page() {
                 </h2>
                 <p className="text-xl text-[#4B4B4B] mb-12">
                   Learning with Duolingo is fun, and research shows that it works! With quick, bite-sized lessons,
-                  you'll earn points and unlock new levels while gaining real-world communication skills.
+                  you&apos;ll earn points and unlock new levels while gaining real-world communication skills.
                 </p>
                 <div className="space-y-12">
                   <div>

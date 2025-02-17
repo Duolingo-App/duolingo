@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/app/components/ui/Button"
 import { ProgressBar } from "@/app/components/ui/progress-bar"
 import { OptionCard } from "@/app/components/ui/option-card"
 import { Mascot } from "@/app/components/ui/mascot"
@@ -68,7 +68,7 @@ export default function OnboardingPage() {
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1)
     } else {
-      router.push('/exercise')
+      router.push('/homepage')
     }
   }
 
