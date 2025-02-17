@@ -18,7 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchUnits = async () => {
       try {
-        const response = await fetch('/api/units?userId=1') // Adjust the URL as needed
+        const response = await fetch('/api/units') // Adjust the URL as needed
         if (!response.ok) {
           throw new Error('Failed to fetch units')
         }
