@@ -1,9 +1,11 @@
+"use client"
+
 import React from 'react'
 import { SidebarNav } from "@/app/components/sidebar-nav"
 import { RightSidebar } from "@/app/components/right-sidebar"
 import Home from "@/app/components/mainPage";
 
-function page() {
+function Page() {
   return (
     <div>
        <div className="flex min-h-screen bg-[#ffffff]">
@@ -17,4 +19,4 @@ function page() {
   )
 }
 
-export default page
+export default Page

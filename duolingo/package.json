@@ -6,8 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "seed": "ts-node app/prisma/seed.ts",
+    "seed": "ts-node app/prisma/seed",
     "lint": "next lint"
+  },
+  "prisma": {
+    "schema": "prisma/schema/schema.prisma"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.0.0",
@@ -22,6 +25,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.1",
+     "ts-node": "^10.9.2",
     "clsx": "^2.1.1",
     "cookies-next": "^5.1.0",
     "formidable": "^3.5.2",
