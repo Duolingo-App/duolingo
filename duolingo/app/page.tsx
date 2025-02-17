@@ -11,7 +11,7 @@ import img2 from "@/public/img/img2.png"
 import img3 from "@/public/img/img3.png"
 import img4 from "@/public/img/img4.png"
 import img5 from "@/public/img/img5.png"
-
+console.log("hiii")
 const languages = [
   { code: "SPANISH", flag: "" },
   { code: "FRENCH", flag: "🇫🇷" },
