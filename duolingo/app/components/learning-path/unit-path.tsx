@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { BookOpen } from "lucide-react"
-import { Button } from "@/app/components/ui/Button"
+import { Button } from "@/app/components/ui/button"
 import { LessonNode } from "./lesson-node"
 import { theme } from "@/app/lib/theme"
 import type { Unit } from "@/app/types/duolingo"
