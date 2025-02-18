@@ -1,4 +1,4 @@
-import { Button } from "@/app/components/ui/Button"
+import { Button } from "@/app/components/ui/button"
 import { Card } from "@/app/components/ui/card"
 import Image from "next/image"
 import { LineChart } from "lucide-react"

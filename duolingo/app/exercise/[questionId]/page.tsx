@@ -7,7 +7,24 @@ import { ProgressBar } from "@/app/components/ui/progress-bar"
 import { Mascot } from "@/app/components/ui/mascot"
 import { HeartDepletedModal } from "@/app/components/ui/HeartDepletedModal"
 import { useParams } from "next/navigation"
+import { Heart } from 'lucide-react'
 type ExerciseType = "TRANSLATE" | "SELECT" | "ARRANGE" | "SPEAK" | "LISTEN"
+
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+type SpeechRecognitionEvent = {
+  results: {
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
+      };
+    };
+  };
+};
 console.log("useParam")
 interface Exercise {
   id: string|number
@@ -27,9 +44,41 @@ export default function ExercisePage() {
   const [error, setError] = useState<string | null>(null)
   const [isHeartDepleted, setIsHeartDepleted] = useState(false);
  const { questionId } = useParams<{ questionId: string }>()
-        console.log(questionId)
+ const [hearts, setHearts] = useState(0);
   const progress = ((currentExercise + 1) / exercises.length) * 100
+  const HeartsDisplay = ({ hearts }: { hearts: number }) => {
+    return (
+      <div className="flex items-center gap-1 ml-4">
+        {Array.from({ length: hearts }).map((_, index) => (
+          <Heart
+            key={index}
+            className={`w-5 h-5 ${
+              index < hearts ? 'text-red-500 fill-red-500' : 'text-gray-300'
+            }`}
+          />
+        ))}
+      </div>
+    )
+  }
+  const fetchHearts = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
 
+      const response = await fetch('/api/heart', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setHearts(data.hearts)
+      }
+    } catch (error) {
+      console.error('Error fetching hearts:', error)
+    }
+  }
   // Fetch exercises from the backend
   useEffect(() => {
     if (!questionId) {
@@ -37,7 +86,9 @@ export default function ExercisePage() {
       setIsLoading(false)
       return
     }
-  
+
+
+    fetchHearts()
     const fetchExercises = async () => {
       try {
         const response = await fetch(`/api/questions/${questionId}`)
@@ -66,47 +117,55 @@ export default function ExercisePage() {
     }
   
     fetchExercises()
-  }, [questionId])
-  const handleCheck = async() => {
-    const current = exercises[currentExercise]
-    
-    // Normalize both answer and correctAnswer by trimming whitespace, converting to lowercase
-    const normalizedAnswer = answer.trim().toLowerCase()
+  }, [questionId,hearts])
+  const handleCheck = async () => {
+    fetchHearts()
+    const current = exercises[currentExercise];
+  
+    // Normalize both answer and correctAnswer
+    const normalizedAnswer = answer.trim().toLowerCase();
     const normalizedCorrectAnswer = Array.isArray(current.correctAnswer)
       ? current.correctAnswer.join(" ").trim().toLowerCase()
-      : current.correctAnswer.trim().toLowerCase()
-    
-    // Check if the normalized answer is included in the correct answer or vice versa
-    const correct = normalizedAnswer.includes(normalizedCorrectAnswer) || 
-                   normalizedCorrectAnswer.includes(normalizedAnswer)
-    
-    setIsCorrect(correct)
-   
+      : current.correctAnswer.trim().toLowerCase();
+  
+    // Check if the answer is correct
+    const correct = normalizedAnswer.includes(normalizedCorrectAnswer) ||
+                    normalizedCorrectAnswer.includes(normalizedAnswer);
+  
+    setIsCorrect(correct);
+  
     // Send the attempt to the backend
-  try {
-    const response = await fetch("/api/user-attempts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        // Replace with the actual user ID (e.g., from authentication)
-        questionId: current.id, // Use the question ID from the current exercise
-        isCorrect: correct,
-      }),
-    });
-    console.log("ejaaa",response)
-    const data = await response;
-    if (response.status === 403) {
-      setIsHeartDepleted(true)
-        } else {
-      console.log("Attempt recorded:", data);
+    try {
+      const token = localStorage.getItem("token"); // Get token from localStorage
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch("/api/user-attempts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // Add Authorization header
+        },
+        body: JSON.stringify({
+          questionId: current.id,
+          isCorrect: correct,
+        }),
+      });
+
+      if (response.status === 403) {
+        setIsHeartDepleted(true);
+      } else if (!response.ok) {
+        throw new Error("Failed to record attempt");
+      } else {
+        console.log("Attempt recorded successfully");
+      }
+    } catch (error) {
+      console.error("Error recording attempt:", error);
     }
-  } catch (error) {
-    console.error("Error recording attempt:", error);
-  }
-  }
+  };
   const handleNext = () => {
+    fetchHearts()
     if (currentExercise < exercises.length - 1) {
       setCurrentExercise(prev => prev + 1)
       setAnswer("")
@@ -213,17 +272,53 @@ export default function ExercisePage() {
           </div>
         )
   
-      case "SPEAK":
-        return (
-          <div className="text-center">
-            <button className="w-20 h-20 rounded-full bg-[#58CC02] text-white flex items-center justify-center">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-              </svg>
-            </button>
-            <p className="mt-4 text-gray-500">Click to start speaking</p>
-          </div>
-        )
+        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new Recognition();
+case "SPEAK":
+return (
+  <div className="text-center">
+    <button
+      onClick={() => {
+        // Initialize speech recognition
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US'; // Set language
+        recognition.interimResults = true; // Enable real-time results
+        recognition.maxAlternatives = 1; // Return only one result
+
+        // Start recognition
+        recognition.start();
+
+        // Handle speech recognition results
+          recognition.onresult = (event: SpeechRecognitionEvent) => {
+          const transcript: string = event.results[0][0].transcript;
+          setAnswer(transcript);
+          };
+
+        // Handle errors
+          recognition.onerror = (event: { error: string }) => {
+          console.error('Speech recognition error:', event.error);
+          alert('Speech recognition failed. Please try again.');
+          };
+
+        // Stop recognition when the user stops speaking
+        recognition.onspeechend = () => {
+          recognition.stop();
+        };
+      }}
+      className="w-20 h-20 rounded-full bg-[#58CC02] text-white flex items-center justify-center"
+    >
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+      </svg>
+    </button>
+    <p className="mt-4 text-gray-500">Click to start speaking</p>
+
+    {/* Display transcribed text */}
+    <div className="mt-4 p-4 border rounded-xl bg-gray-50">
+      {answer || "Your speech will appear here..."}
+    </div>
+  </div>
+);
   
       default:
         return null
@@ -244,7 +339,7 @@ export default function ExercisePage() {
               <button className="text-gray-400 hover:text-gray-600">
                 <ArrowLeft className="w-6 h-6" />
               </button>
-              <ProgressBar progress={progress} />
+              <ProgressBar progress={progress} /><HeartsDisplay hearts={hearts} />
             </div>
           </div>
         </header>
@@ -253,7 +348,7 @@ export default function ExercisePage() {
           <Mascot message={exercises[currentExercise]?.text}/>
   
           <div className="my-8">
-            {renderExerciseContent()}
+             {renderExerciseContent()}
           </div>
   
           <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-50 border-t">

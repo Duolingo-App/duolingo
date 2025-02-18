@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/app/components/ui/Button"
+import{Button} from "@/app/components/ui/button"
 import { ProgressBar } from "@/app/components/ui/progress-bar"
 import { OptionCard } from "@/app/components/ui/option-card"
 import { Mascot } from "@/app/components/ui/mascot"
@@ -107,9 +107,9 @@ export default function OnboardingPage() {
             {steps[currentStep].options.map((option, index) => (
               <OptionCard
                 key={index}
-                icon={option.icon}
+                icon={'icon' in option ? option.icon : undefined}
                 title={option.title}
-                subtitle={option.subtitle}
+                subtitle={'subtitle' in option ? option.subtitle : undefined}
                 selected={selections[currentStep] === index}
                 onClick={() => handleSelect(index)}
               />
