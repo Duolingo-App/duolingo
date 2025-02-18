@@ -75,6 +75,7 @@ export function UnitPath({ unit, onLessonClick }: UnitPathProps) {
           {unit.lessons.map((lesson, index) => (
             <LessonNode
               key={lesson.id}
+              hi={lesson.id}
               status={lesson.status}
               position={index}
               onClick={() => onLessonClick?.(lesson.id)}

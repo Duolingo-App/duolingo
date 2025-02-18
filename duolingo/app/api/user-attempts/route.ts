@@ -19,7 +19,6 @@ export async function POST(req: Request) {
     // Verify token and get userId
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
     const userId = parseInt(decoded.id);
-    console.log("jdidi",userId);
     // Parse request body
     const body = await req.json();
     if (!body) {
@@ -43,7 +42,7 @@ export async function POST(req: Request) {
     let userHeart = await prisma.heart.findFirst({
       where: { userId: userId },
     });
-    console.log(userHeart);
+   
     if (!userHeart) {
       userHeart= await prisma.heart.create({
         data: {

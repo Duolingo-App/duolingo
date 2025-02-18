@@ -51,7 +51,6 @@ export default function Home() {
   const handleLessonClick = (lessonId: string) => {
     setSelectedLesson(lessonId)
     router.push(`/exercise/${lessonId}`)
-    console.log(`Selected lesson: ${lessonId}`)
     // Handle lesson selection logic
   }
 

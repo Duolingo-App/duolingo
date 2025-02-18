@@ -11,9 +11,10 @@ interface LessonNodeProps {
   position: number
   onClick?: () => void
   className?: string
+  hi: string
 }
 
-export function LessonNode({ status, position, onClick, className }: LessonNodeProps) {
+export function LessonNode({ status, position, onClick, className ,hi}: LessonNodeProps) {
   const variants = {
     initial: { scale: 0.8, opacity: 0 },
     animate: {
@@ -30,7 +31,7 @@ export function LessonNode({ status, position, onClick, className }: LessonNodeP
       scale: 1.05,
       transition: {
         duration: 0.2,
-        ease: theme.animations.bounce,
+        ease: theme.animations,
       },
     },
     tap: {
