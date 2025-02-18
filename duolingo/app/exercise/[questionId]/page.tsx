@@ -8,6 +8,8 @@ import { Mascot } from "@/app/components/ui/mascot"
 import { HeartDepletedModal } from "@/app/components/ui/HeartDepletedModal"
 import { useParams } from "next/navigation"
 import { Heart } from 'lucide-react'
+import { useRouter } from "next/navigation" 
+
 type ExerciseType = "TRANSLATE" | "SELECT" | "ARRANGE" | "SPEAK" | "LISTEN"
 
 declare global {
@@ -36,6 +38,7 @@ interface Exercise {
 }
 
 export default function ExercisePage() {
+  const router = useRouter()
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [currentExercise, setCurrentExercise] = useState(0)
   const [answer, setAnswer] = useState("")
@@ -96,7 +99,6 @@ export default function ExercisePage() {
           throw new Error("Failed to fetch questions")
         }
         const data = await response.json()
-  console.log("data",data)
         // Transform backend data to match the Exercise type
         const transformedExercises: Exercise[] = data.questions.map((question: any) => ({
           id: question.id,
@@ -170,11 +172,13 @@ export default function ExercisePage() {
       setCurrentExercise(prev => prev + 1)
       setAnswer("")
       setIsCorrect(null)
+    }else{
+      const aa=parseInt(questionId)
+      router.push(`/exercise/${(aa+1).toString()}`)
     }
   }
   const renderExerciseContent = () => {
     const exercise = exercises[currentExercise]
-    console.log("exercise",exercise)
     if (!exercise) {
       return <div>Loading exercise...</div>
     }
@@ -272,8 +276,6 @@ export default function ExercisePage() {
           </div>
         )
   
-        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new Recognition();
 case "SPEAK":
 return (
   <div className="text-center">

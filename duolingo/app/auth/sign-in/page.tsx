@@ -30,7 +30,7 @@ export default function SignIn() {
   
       const data = await res.json();
   
-      console.log("Response data:", data);
+
   
       if (data.token) {
         localStorage.setItem("token", data.token); // Store token

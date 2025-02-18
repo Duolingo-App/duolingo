@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { questionId: string } }
+  { params }: { params: { questionId: any } }
 ) {
   try {
     const lessonId = await parseInt(params?.questionId);
