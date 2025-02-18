@@ -1,80 +1,109 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from '@prisma/client';
+// app/api/user-attempts/route.ts
+import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';// Ensure Prisma client is properly imported
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "POST") {
-    try {
-      const { userId, questionId, isCorrect } = req.body;
+export async function POST(req: Request) {
+  try {
+    // Extract token from Authorization header
+    const token = req.headers.get('authorization')?.split(' ')[1];
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Authorization token is required' },
+        { status: 401 }
+      );
+    }
 
-      // Validate the input
-      if (!userId || !questionId || typeof isCorrect !== "boolean") {
-        return res.status(400).json({ error: "userId, questionId, and isCorrect are required" });
-      }
+    // Verify token and get userId
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+    const userId = parseInt(decoded.id);
+    console.log("jdidi",userId);
+    // Parse request body
+    const body = await req.json();
+    if (!body) {
+      return NextResponse.json(
+        { error: 'Request body is required' },
+        { status: 400 }
+      );
+    }
 
-      // Fetch user heart status
-      const userHeart = await prisma.heart.findUnique({
-        where: { id: parseInt(userId) },
+    const { questionId, isCorrect } = body;
+
+    // Validate input
+    if (!questionId || typeof isCorrect !== 'boolean') {
+      return NextResponse.json(
+        { error: 'questionId and isCorrect are required' },
+        { status: 400 }
+      );
+    }
+
+    // Fetch user heart status
+    let userHeart = await prisma.heart.findFirst({
+      where: { userId: userId },
+    });
+    console.log(userHeart);
+    if (!userHeart) {
+      userHeart= await prisma.heart.create({
+        data: {
+          userId: userId,
+          heartCount: 5,
+          createdAt: new Date(),
+          payment: false,
+        },
       });
+    }
 
-      if (!userHeart) {
-        return res.status(404).json({ error: "User heart record not found" });
+    // Check and reset hearts if it's a new day
+    const now = new Date();
+    const lastUpdated = new Date(userHeart.createdAt);
+    const isNewDay = now.toDateString() !== lastUpdated.toDateString();
+
+    if (userHeart.heartCount === 0 && !userHeart.payment) {
+      if (isNewDay) {
+        await prisma.heart.update({
+          where: { id: (userHeart.id) },
+          data: { heartCount: 5, createdAt: now },
+        });
+        return;
+      } else {
+        return NextResponse.json(
+          { error: "You have 0 hearts. Try again tomorrow." },
+          { status: 403 }
+        );
       }
+    }
+    if (userHeart.heartCount == 0) {
+      return NextResponse.json(
+        { error: "You have 0 hearts. Try again tomorrow." },
+        { status: 403 }
+      );
+    }
 
-      // Check if the user is restricted due to 0 hearts
-      const now = new Date();
-      const lastUpdated = new Date(userHeart.createdAt);
-      const isNewDay = now.toDateString() !== lastUpdated.toDateString();
-
-      if (userHeart.heartCount === 0 && !userHeart.payment) {
-        // Reset hearts to 5 if a new day has started
-        if (isNewDay) {
-          await prisma.heart.update({
-            where: { id: parseInt(userId) },
-            data: { heartCount: 5, createdAt: now },
-          });
-        } else {
-          return res.status(403).json({ error: "You have 0 hearts. Try again tomorrow." });
-        }
-      }
-
-      // Record attempt
+    if (isCorrect) {
       const userAttempt = await prisma.userAttempt.create({
         data: {
-          userId: parseInt(userId),
+          userId: userId,
           questionId: parseInt(questionId),
           isCorrect,
         },
       });
-
-      if (isCorrect) {
-        // Grant an achievement if correct
-        await prisma.userAchievement.create({
-          data: {
-            userId: parseInt(userId),
-            achievementId: 1, // Replace with actual achievement logic
-          },
-        });
-      } else {
-        // Deduct heart if incorrect and user is not premium
-        if (!userHeart.payment) {
-          await prisma.heart.update({
-            where: { id: parseInt(userId) },
-            data: { heartCount: userHeart.heartCount - 1 },
-          });
-        }
-      }
-
-      return res.status(200).json({ message: "Attempt recorded successfully", userAttempt });
-    } catch (error) {
-      console.error("Error processing attempt:", error);
-      return res.status(500).json({ error: "Internal server error" });
     }
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
+
+    // Grant achievement or deduct heart
+    if (!userHeart.payment && !isCorrect) {
+      await prisma.heart.update({
+        where: { id: userHeart.id },
+        data: { heartCount: userHeart.heartCount - 1 },
+      });
+    }
+
+    return NextResponse.json({
+      message: "Attempt recorded successfully",
+    });
+  } catch (error: any) {
+    console.log('Error processing attempt:', error.stack);
+    
   }
 }

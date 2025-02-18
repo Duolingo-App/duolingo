@@ -47,8 +47,6 @@ model User {
   points      UserPoint[]
   achievements UserAchievement[]
     hearts      Heart[]
-  sentMessages Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
 }
 
 

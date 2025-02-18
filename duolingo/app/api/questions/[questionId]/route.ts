@@ -32,7 +32,7 @@ export async function GET(
     }
 
     // Parse the options field for each question
-    const parsedQuestions = lesson.questions.map((q) => ({
+    const parsedQuestions = lesson.questions.map((q:any) => ({
       ...q,
       options: JSON.parse(q.options),
     }));
@@ -41,7 +41,7 @@ export async function GET(
       ...lesson,
       questions: parsedQuestions,
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error("Error fetching lesson and questions:", error);
     return NextResponse.json(
       { error: error.message },
